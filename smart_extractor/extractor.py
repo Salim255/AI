@@ -2,10 +2,11 @@ from typing import Callable, Any, Optional, Type, Dict
 from pydantic import BaseModel
 
 from smart_extractor.retry_loop import retry_until_valid
+from llms.groq_llm import groq_llm_call
 
 def smart_json_extractor(
     schema: Type[BaseModel],
-    llm_call: Callable[[str], Dict[str, Any]],
+    llm_call:groq_llm_call,
     prompt: str,
     max_retries: int = 3,
 ) -> Optional[BaseModel]:

@@ -6,3 +6,4 @@
   - pip install openai
   - or:
     - pip install groq
+  - pip install anthropic
