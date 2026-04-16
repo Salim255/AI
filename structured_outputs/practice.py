@@ -1,6 +1,8 @@
-from validators.validate_user import validate_user_json
-from validators.validate_transaction import validate_transaction_json
-from validators.validate_product import validate_product_json
+from structured_outputs.validators.validate_user import validate_user_json
+from structured_outputs.validators.validate_transaction import validate_transaction_json
+from structured_outputs.validators.validate_product import validate_product_json
+from smart_extractor.retry_loop import retry_until_valid
+from structured_outputs.schemas.user_schema import User
 
 # Example of validating a product JSON output from a model
 product_model_output = {
@@ -30,8 +32,18 @@ validated_transaction = validate_transaction_json(transaction_model_output)
 # Fake model output (tu peux le casser pour tester)
 model_output = {
     "fullName": "John Doe",
-    "age": 27,
+    "age": "do@e",  # string instead of int
     "city": "Berlin"
 }
 # Validate the model output
 validated_user = validate_user_json(model_output)
+
+def fake_model_output():
+    return {
+        "fullName": "John Doe",
+        "age": "27 salim haasan",  # string instead of int
+        "city": "Berlin"
+    }
+
+result = retry_until_valid(User, fake_model_output)
+print("Result:", result)

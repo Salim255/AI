@@ -1,5 +1,5 @@
 from pydantic import ValidationError
-from schemas.product_schema import Product
+from structured_outputs.schemas.product_schema import Product
 
 def validate_product_json(data: dict):
     try:

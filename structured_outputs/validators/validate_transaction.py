@@ -1,5 +1,5 @@
 from pydantic import ValidationError
-from schemas.transaction_schema import Transaction
+from structured_outputs.schemas.transaction_schema import Transaction
 
 
 def validate_transaction_json(data: dict):
