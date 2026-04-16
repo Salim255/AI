@@ -5,7 +5,7 @@ def generate_correction_instructions(errors: ValidationError):
     Convert Pydantic validation errors into human-readable correction instructions
     for the LLM.
     """
-
+    print("Generating correction instructions for errors: 👹👹", errors.errors())
     instructions = ["Fix the JSON according to these rules:"]
 
     for error in errors.errors():

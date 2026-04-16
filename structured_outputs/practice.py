@@ -41,9 +41,22 @@ validated_user = validate_user_json(model_output)
 def fake_model_output():
     return {
         "fullName": "John Doe",
-        "age": "27 salim haasan",  # string instead of int
+        "age": "27dsdsds",  # string instead of int
         "city": "Berlin"
     }
 
 result = retry_until_valid(User, fake_model_output)
 print("Result:", result)
+
+def fake_llm_correction(instructions):
+    print("\nLLM received correction instructions:")
+    print(instructions)
+
+    # Simulate corrected JSON
+    return {
+        "fullName": "John Doe",
+        "age": "27",
+        "city": "Berlin"
+    }
+result_with_correction = retry_until_valid(User, fake_model_output, llm_fn=fake_llm_correction)
+print("Final result:", result_with_correction)
