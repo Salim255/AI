@@ -1,5 +1,5 @@
 from pydantic import ValidationError
-from schemas.user_schema import User
+from structured_outputs.schemas.user_schema import User
 
 def validate_user_json(data: dict):
     try:
