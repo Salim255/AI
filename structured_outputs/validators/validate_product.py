@@ -1,12 +1,11 @@
-from pydantic import BaseModel
-from typing import List
+from pydantic import ValidationError
+from schemas.product_schema import Product
 
-class ProductFeature(BaseModel):
-    name: str
-    value: str
-
-class Product(BaseModel):
-    id: str
-    name: str
-    price: float
-    features: List[ProductFeature]
+def validate_product_json(data: dict):
+    try:
+        product = Product(**data)
+        print("VALID JSON:", product)
+        return product
+    except ValidationError as e:
+        print("INVALID JSON:", e.errors())
+        return None
