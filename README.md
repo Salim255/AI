@@ -4,3 +4,5 @@
 
 - OpenAI integration:
   - pip install openai
+  - or:
+    - pip install groq

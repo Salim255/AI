@@ -1,15 +1,19 @@
 import json
 import os
-from openai import OpenAI
+#from openai import OpenAI
+from groq import Groq
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+#client = OpenA(api_key=os.getenv("OPENAI_API_KEY"))
+
+client = Groq(api_key=os.getenv("GROQAI_API_KEY"))
 
 def openai_llm_call(prompt: str) -> dict:
     """
     Calls an OpenAI model and expects pure JSON in the response.
     """
     response = client.chat.completions.create(
-        model="gpt-4.1-mini",  # or another model
+        #model="gpt-3.5-turbo",  # or another model
+        model="llama-3.1-8b-instant",
         messages=[
              {
                 "role": "system",
