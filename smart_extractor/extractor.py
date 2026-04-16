@@ -1,5 +1,5 @@
-from typing import Callable, Any, Type, Dict
-from pydantic import BaseModel, ValidationError
+from typing import Callable, Any, Optional, Type, Dict
+from pydantic import BaseModel
 
 from smart_extractor.retry_loop import retry_until_valid
 
@@ -7,8 +7,8 @@ def smart_json_extractor(
     schema: Type[BaseModel],
     llm_call: Callable[[str], Dict[str, Any]],
     prompt: str,
-    max_retries: int = 3
-)-> BaseModel | None:
+    max_retries: int = 3,
+) -> Optional[BaseModel]:
     """
     Orchestrates:
     - LLM call
