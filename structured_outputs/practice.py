@@ -1,10 +1,24 @@
 from validators.validate_user import validate_user_json
 from validators.validate_transaction import validate_transaction_json
+from validators.validate_product import validate_product_json
+
+# Example of validating a product JSON output from a model
+product_model_output = {
+    "id": "abc123",
+    "name": "Smartphone",
+    "price": 299.99,
+    "features": [
+        {"name": "Screen Size", "value": "6.5 inches"},
+        {"name": "Battery Life", "value": "24 hours"}
+    ]
+}
+# Validate the product model output
+validated_product = validate_product_json(product_model_output)
 
 
 # Example of validating a user JSON output from a model
 transaction_model_output = {
-    "transactionId": "12345",
+    "id": "12345",
     "amount": 100.0,
     "currency": "USD",
     "status": "pending",
