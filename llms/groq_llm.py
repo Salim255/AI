@@ -4,12 +4,11 @@ from groq import Groq
 
 client = Groq(api_key=os.getenv("GROQAI_API_KEY"))
 
-def groq_llm_call(prompt: str) -> dict:
+def groq_llm_call(prompt: str, debug: bool = False) -> dict:
     """
     Calls a Groq model and expects pure JSON in the response.
     """
     response = client.chat.completions.create(
-        #model="gpt-3.5-turbo",  # or another model
         model="llama-3.1-8b-instant",
         messages=[
              {
@@ -27,6 +26,9 @@ def groq_llm_call(prompt: str) -> dict:
         response_format={"type": "json_object"}
     )
     content =  response.choices[0].message.content
+
+    if debug:
+        print("Raw LLM response content: 👹👹", content)
     try:
         return json.loads(content)
     except json.JSONDecodeError:

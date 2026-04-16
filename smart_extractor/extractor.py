@@ -6,7 +6,7 @@ from llms.groq_llm import groq_llm_call
 
 def smart_json_extractor(
     schema: Type[BaseModel],
-    llm_call:groq_llm_call,
+    llm_call: groq_llm_call,
     prompt: str,
     max_retries: int = 3,
 ) -> Optional[BaseModel]:

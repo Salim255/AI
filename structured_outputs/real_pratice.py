@@ -6,13 +6,13 @@ from structured_outputs.schemas.user_schema import User
 if __name__ == "__main__":
     prompt = (
         "Extract a JSON object matching this schema: "
-        "User { fullName: string, age: integer, city: string } "
-        "from the text: 'John Doe, 27, Berlin'. "
+        "User { fullName: string, age: integer, country: string } "
+        "from the text: 'John Doe, 27, France'. "
         "Return ONLY JSON."
     )
     result = smart_json_extractor(
         schema=User,
-        llm_call=groq_llm_call,
+        llm_call=lambda p: groq_llm_call(p, debug=True),
         prompt=prompt,
         max_retries=3,
     )
