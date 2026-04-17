@@ -1,3 +1,4 @@
+# This is the JSON schema the model uses to fill arguments.
 get_user_schema = {
     "type": "function",
     "name": "get_user",
