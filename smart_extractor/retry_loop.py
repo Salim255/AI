@@ -23,7 +23,7 @@ def retry_until_valid(schema, model_fn, llm_fn=None, max_retries=3):
             # Ask the LLM to correct the JSON
             corrected = llm_fn(instructions)
 
-            # ⭐ VALIDATE THE CORRECTED JSON IMMEDIATELY
+            # VALIDATE THE CORRECTED JSON IMMEDIATELY
             try:
                 return schema(**corrected)
             except ValidationError as e2:

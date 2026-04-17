@@ -8,7 +8,7 @@ def smart_json_extractor(
     schema: Type[BaseModel],
     llm_call: groq_llm_call,
     prompt: str,
-    max_retries: int = 3,
+    max_retries: int = 6,
 ) -> Optional[BaseModel]:
     """
     Orchestrates:
