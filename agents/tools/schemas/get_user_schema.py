@@ -1,10 +1,14 @@
 get_user_schema = {
+    "type": "function",
     "name": "get_user",
     "description": "Fetch a user by ID",
     "parameters": {
         "type": "object",
         "properties": {
-            "user_id": {"type": "integer"}
+             "user_id": {
+                "type": "integer",
+                "description": "The ID of the user to fetch"
+            }
         },
         "required": ["user_id"]
     }
