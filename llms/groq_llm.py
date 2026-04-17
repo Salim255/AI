@@ -2,7 +2,7 @@ import json
 import os
 from groq import Groq
 
-client = Groq(api_key=os.getenv("GROQAI_API_KEY"))
+client = Groq(api_key=os.getenv("GROAI_API_KEY"))
 
 def groq_llm_call(prompt: str, debug: bool = False) -> dict:
     """

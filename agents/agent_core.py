@@ -1,6 +1,6 @@
 from agents.tools.tool_registry import TOOLS
 from agents.tools.tool_call_parser import parse_tool_call
-from agents.tools.tool_executors import execute_tool
+from agents.tools.tool_executors import get_user
 
 # This is the core agent logic that ties everything together.
 # It takes a user message, asks the model what to do, executes the tool, and returns the final answer.
@@ -17,10 +17,10 @@ def run_agent(llm, user_message: str):
     )
 
     # 2. Parse tool call
-    tool_name, arguments = parse_tool_call(model_response)
+    arguments = parse_tool_call(model_response)
 
     # 3. Execute the tool
-    tool_result = execute_tool(tool_name, arguments)
+    tool_result = get_user(arguments["user_id"])
 
     # 4. Send the result back to the model
     final_answer = llm.chat(
