@@ -1,7 +1,7 @@
-from agents.tools.schemas import get_user_schema
-from agents.tools.tool_executor import get_user
-
-
+from agents.tools import get_user_schema
+from agents.tools.tool_executors import get_user
+# This file registers all the tools that the agent can call,
+#  along with their schemas and executor functions.
 TOOLS = {
     "get_user": {
         "schema": get_user_schema,

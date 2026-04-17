@@ -1,3 +1,4 @@
+# This file contains the actual implementations of the tools that the agent can call.
 def get_user(user_id: int):
     # Replace this with your real DB later
     fake_db = {
