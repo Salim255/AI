@@ -1,6 +1,8 @@
 from agents.tools.tool_registry import TOOL_REGISTRY
 from agents.tools.tool_schemas_list import TOOLSGROQ
 from agents.tools.tool_call_parser import parse_tool_call_groq
+from smart_extractor.prompt_builder import build_prompt
+from structured_outputs.schemas.user_schema import User
 import json
 
 # FIRST CALL — model must decide which tool to call
@@ -18,7 +20,7 @@ If the user asks for a user profile, call get_user with the correct user_id.
 """
 
 # SECOND CALL — tool already executed, answer directly
-NO_TOOL_CALL_SYSTEM_PROMPT = """
+text="""
 You already executed the tool. 
 Now answer the user directly using the tool result. 
 Do NOT call any tools again.
@@ -26,6 +28,8 @@ Do NOT return tool_calls.
 Do NOT return JSON.
 Answer in natural language only.
 """
+schema_dict = User.model_json_schema()
+NO_TOOL_CALL_SYSTEM_PROMPT = build_prompt('user', schema_dict ,text)
 
 
 def run_agent(llm, user_message: str):
