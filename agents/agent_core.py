@@ -3,7 +3,7 @@ from agents.tools.tool_schemas_list import TOOLSGROQ
 from agents.tools.tool_call_parser import parse_tool_call_groq
 from smart_extractor.prompt_builder import build_prompt
 from structured_outputs.schemas.user_schema import User
-from smart_extractor.extractor import  smart_json_extractor
+from smart_extractor.retry_loop import retry_first_tool_call_until_valid
 import json
 
 # FIRST CALL — model must decide which tool to call
@@ -52,10 +52,7 @@ def run_agent(llm, user_message: str):
         {"role": "user", "content": user_message}
     ]
 
-    model_response = llm(
-        messages=messages_first_call,
-        tools=tool_schemas
-    )
+    model_response = retry_first_tool_call_until_valid(llm,  messages=messages_first_call, tools=tool_schemas )
 
     # ConversationId object
     tool_calls = model_response["tool_calls"]

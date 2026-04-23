@@ -18,7 +18,7 @@ def retry_first_tool_call_until_valid(llm_fn, messages, tools, max_retries=3):
             response = llm_fn(messages=messages, tools=tools)
         except Exception as e:
             last_error = e
-            print("❌ LLM error:", e)
+            print("❌ LLM error:",  last_error)
             continue
 
         tool_calls = response.get("tool_calls")
@@ -30,7 +30,7 @@ def retry_first_tool_call_until_valid(llm_fn, messages, tools, max_retries=3):
         print("⚠️ Model did not return a tool call. Retrying...")
 
     # FAILED AFTER RETRIES
-    print("❌ Model failed to return a tool call after retries.")
+    print("❌ Model failed to return a tool call after retries.",  last_error)
     return None
 
 
