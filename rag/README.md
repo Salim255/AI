@@ -100,3 +100,7 @@ It gives your AI:
 - enterprise‑grade reliability
 
 This folder contains all components required to build a complete, production‑ready RAG system.
+
+## Deps
+
+- pip install sentence-transformers

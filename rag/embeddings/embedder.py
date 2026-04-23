@@ -37,4 +37,9 @@ def embed_text(text: str) -> dict:
         so it can be serialized to JSON and passed through your tool‑calling system.
     """
 
-    # Encode
+    # Encode the text into a dense vector using the loaded model.
+    # The output is a NumPy array, which we convert to a list for JSON compatibility.
+    embedding = model.encode(text).tolist()
+
+    # Return the embedding wrapped in a dict.
+    return {"embedding": embedding}
