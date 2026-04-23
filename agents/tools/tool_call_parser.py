@@ -23,7 +23,6 @@ def parse_tool_call_groq(model_output: dict):
     # Groq returns objects, not dicts → convert to string then parse manually
     call = tool_calls[0]
 
-    print("\n=== MODEL RESPONSE ===👹", call)
     # Convert the tool call object to a dict-like structure
     # Groq objects behave like: ChatCompletionMessageToolCall(...)
     # So we extract fields manually
@@ -31,5 +30,5 @@ def parse_tool_call_groq(model_output: dict):
     tool_call_id =  call.id
     tool_name = call.function.name
     arguments = json.loads(call.function.arguments)
-    print("\n=== MODEL RESPONSE ===👹👹", tool_call_id, tool_name, arguments)
+    print("\n=== MODEL RESPONSE === from parse_tool_call_groq=== ", tool_call_id, tool_name, arguments)
     return  tool_call_id, tool_name, arguments

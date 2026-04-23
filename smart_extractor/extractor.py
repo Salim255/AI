@@ -1,6 +1,6 @@
 from typing import Callable, Any, Optional, Type, Dict
 from pydantic import BaseModel
-
+import json
 from smart_extractor.retry_loop import retry_until_valid
 from llms.groq_llm import groq_llm_call
 
@@ -8,9 +8,45 @@ from llms.groq_llm import groq_llm_call
 def smart_json_tool_calling_extractor(
     schema: Type[BaseModel],
     llm_call: groq_llm_call,
-    prompt: str,
+    messages: list[dict],
     max_retries: int = 6,
-)-> Optional[BaseModel]:
+) -> Optional[BaseModel]:
+    """
+    Same as smart_json_extractor, but for tool-calling second LLM call.
+    Instead of a string prompt, we pass a list of messages.
+    """
+
+    def model_fn():
+        # Call the LLM with messages instead of a string
+        #messages=messages_second_call
+        response = llm_call(messages=messages)
+        content = response.get("content") or response.get("message") or ""
+        try:
+            return json.loads(content)   # <-- FIX: convert JSON string to dict
+        except Exception:
+            return {}  # or return None
+
+
+    def llm_correction_fn(instructions: str):
+        # Ask the LLM to correct its previous answer
+        correction_messages = [
+            {"role": "system", "content": "Fix the JSON according to these instructions."},
+            {"role": "user", "content": instructions}
+        ]
+        response = llm_call(messages=correction_messages)
+        content = response.get("content", "")
+
+        try:
+            return json.loads(content)
+        except Exception:
+            return {}
+
+    return retry_until_valid(
+        schema=schema,
+        model_fn=model_fn,
+        llm_fn=llm_correction_fn,
+        max_retries=max_retries
+    )
 
 def smart_json_extractor(
     schema: Type[BaseModel],

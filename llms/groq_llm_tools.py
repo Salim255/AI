@@ -32,8 +32,8 @@ def groq_llm_tools(
     msg = response.choices[0].message
 
     if debug:
-        print("\n=== RAW GROQ RESPONSE ===")
-        print(msg)
+        print("\n=== RAW GROQ RESPONSE ===groq_llm_tools==\n")
+        print(msg, "\n")
 
     return {
         "content": msg.content,

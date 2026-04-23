@@ -12,7 +12,7 @@ def retry_first_tool_call_until_valid(llm_fn, messages, tools, max_retries=3):
     last_error = None
 
     for attempt in range(max_retries):
-        print(f"🔁 First-call attempt {attempt+1}/{max_retries}")
+        print(f"🔁 First-call attempt:\n {attempt+1}/{max_retries} \n")
 
         try:
             response = llm_fn(messages=messages, tools=tools)
@@ -45,7 +45,7 @@ def retry_until_valid(schema, model_fn, llm_fn=None, max_retries=3):
         try:
             return schema(**output)
         except ValidationError as e:
-            print(f"Attempt {attempt+1} failed:", e.errors(), "👹👹", llm_fn)
+            print(f"Attempt {attempt+1} failed 🔥🔥:\n", e.errors(), llm_fn, "\n")
 
             if llm_fn is None:
                 continue  # fallback: retry without correction
@@ -60,5 +60,5 @@ def retry_until_valid(schema, model_fn, llm_fn=None, max_retries=3):
             try:
                 return schema(**corrected)
             except ValidationError as e2:
-                print("Corrected JSON still invalid:", e2.errors())
+                print("Corrected JSON still invalid🔥🔥: \n", e2.errors())
     return None

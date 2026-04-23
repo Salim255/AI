@@ -3,7 +3,8 @@ from agents.tools.tool_schemas_list import TOOLSGROQ
 from agents.tools.tool_call_parser import parse_tool_call_groq
 from smart_extractor.prompt_builder import build_prompt
 from structured_outputs.schemas.user_schema import User
-from smart_extractor.retry_loop import retry_first_tool_call_until_valid, retry_until_valid
+from smart_extractor.retry_loop import retry_first_tool_call_until_valid
+from smart_extractor.extractor import smart_json_tool_calling_extractor
 import json
 
 # FIRST CALL — model must decide which tool to call
@@ -121,8 +122,13 @@ def run_agent(llm, user_message: str):
         tool_message
     ]
 
-    final_answer = llm(
-        messages=messages_second_call
-    )
+
+    # Second call
+    final_answer = smart_json_tool_calling_extractor(
+        schema=User,
+        llm_call=lambda messages: llm(messages=messages, debug=True),
+        messages=messages_second_call,
+        max_retries=3,
+    ) 
 
     return final_answer
