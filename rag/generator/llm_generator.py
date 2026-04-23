@@ -46,17 +46,17 @@ class LLMGenerator:
 
         # Final RAG prompt template.
         return f"""
-Use ONLY the context below to answer the question.
+            Use ONLY the context below to answer the question.
 
-Context:
-{context_text}
+            Context:
+            {context_text}
 
-Question:
-{query}
+            Question:
+            {query}
 
-If the answer is not in the context, say: "I don't know."
-Answer:
-"""
+            If the answer is not in the context, say: "I don't know."
+            Answer:
+            """
 
     # --------------------------------------------------------
     # Generate the final answer using the LLM
