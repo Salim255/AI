@@ -3,7 +3,7 @@ from agents.tools.tool_schemas_list import TOOLSGROQ
 from agents.tools.tool_call_parser import parse_tool_call_groq
 from smart_extractor.prompt_builder import build_prompt
 from structured_outputs.schemas.user_schema import User
-from smart_extractor.retry_loop import retry_first_tool_call_until_valid
+from smart_extractor.retry_loop import retry_first_tool_call_until_valid, retry_until_valid
 import json
 
 # FIRST CALL — model must decide which tool to call
