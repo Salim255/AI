@@ -7,3 +7,4 @@
   - or:
     - pip install groq
   - pip install anthropic
+  - pip install mistralai

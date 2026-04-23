@@ -28,7 +28,8 @@ def parse_tool_call_groq(model_output: dict):
     # Groq objects behave like: ChatCompletionMessageToolCall(...)
     # So we extract fields manually
      # Extract name + arguments from Groq tool call object
+    tool_call_id =  call.id
     tool_name = call.function.name
     arguments = json.loads(call.function.arguments)
-    print("\n=== MODEL RESPONSE ===👹👹", tool_name, arguments)
-    return tool_name, arguments
+    print("\n=== MODEL RESPONSE ===👹👹", tool_call_id, tool_name, arguments)
+    return  tool_call_id, tool_name, arguments

@@ -1,33 +1,20 @@
-from agents.tools.tool_registry import TOOLSGROQ
+from agents.tools.tool_registry import TOOL_REGISTRY
+from agents.tools.tool_schemas_list import TOOLSGROQ
 from agents.tools.tool_call_parser import parse_tool_call_groq
-from agents.tools.tool_executors import get_user
 import json
 
 # FIRST CALL — model must decide which tool to call
 TOOL_CALL_SYSTEM_PROMPT = """
-You are an AI agent that uses tools to answer user questions.
+You are a tool-calling agent.
 
-You have access to the following tools:
-- get_user(user_id: integer): returns user data.
+You MUST ALWAYS call a tool when responding.
+You MUST NOT answer in natural language.
+You MUST NOT output anything except a tool call.
+You MUST NOT explain your reasoning.
+You MUST NOT return content.
+Your ONLY valid output is a tool call in the correct JSON format.
 
-When the user asks for information that requires a tool, you MUST call the tool using the correct JSON arguments.
-You MUST NOT answer the question directly before the tool is executed.
-You MUST NOT invent arguments.
-You MUST return a tool call in the correct format:
-{
-  "tool_calls": [
-    {
-      "type": "function",
-      "function": {
-        "name": "<tool_name>",
-        "arguments": "<json string>"
-      }
-    }
-  ]
-}
-
-If the user asks for a user profile, ALWAYS call get_user with the correct user_id.
-Do not answer in natural language until the tool result is provided.
+If the user asks for a user profile, call get_user with the correct user_id.
 """
 
 # SECOND CALL — tool already executed, answer directly
@@ -49,7 +36,7 @@ def run_agent(llm, user_message: str):
     3. Send the tool result back to the model to get the final answer.
     """
 
-    tool_schemas = [tool["schema"] for tool in TOOLSGROQ.values()]
+    tool_schemas = TOOLSGROQ
 
     print(tool_schemas)
     #
@@ -75,11 +62,10 @@ def run_agent(llm, user_message: str):
             "tool_calls": None
         }
     
-    tool_call_id =  tool_calls[0]
     #
     # 2. Parse tool call
     #
-    tool_name, arguments = parse_tool_call_groq(model_response)
+    tool_call_id, tool_name, arguments = parse_tool_call_groq(model_response)
 
     if tool_name is None or arguments is None:
         return {
@@ -91,7 +77,7 @@ def run_agent(llm, user_message: str):
     # 3. Execute the tool
     #
     if tool_name == "get_user":
-        tool_result = get_user(arguments["user_id"])
+        tool_result = TOOL_REGISTRY[tool_name](arguments["user_id"])
     else:
         tool_result = {"error": f"Unknown tool: {tool_name}"}
 
@@ -102,15 +88,15 @@ def run_agent(llm, user_message: str):
     #
     tool_message = {
         "role": "tool",
-        "tool_call_id": tool_call_id.id,
-        "name": "get_user",
+        "tool_call_id": tool_call_id,
+        "name": tool_name,
         "content": json.dumps(tool_result)
     }
 
     messages_second_call = [
         {
             "role": "system",
-            "content": "You have already executed the tool. Answer the user directly using the tool result. Do not call any tools again."
+            "content": NO_TOOL_CALL_SYSTEM_PROMPT
         },
         {
             "role": "user",
@@ -121,10 +107,10 @@ def run_agent(llm, user_message: str):
             "content": None,
             "tool_calls": [
                 {
-                    "id": tool_call_id.id,
+                    "id": tool_call_id,
                     "type": "function",
                     "function": {
-                        "name": "get_user",
+                        "name": tool_name,
                         "arguments": json.dumps(arguments)
                     }
                 }
@@ -134,8 +120,7 @@ def run_agent(llm, user_message: str):
     ]
 
     final_answer = llm(
-        messages=messages_second_call,
-        tools=tool_schemas
+        messages=messages_second_call
     )
 
     return final_answer
